@@ -2,7 +2,7 @@
 
 ## 1. Propósito
 
-E-Bike Energy es una aplicación web para consultar la batería asociada a una cuenta cliente y, para administración, revisar el inventario, el historial de cargas, los registros de energía, las alertas y los reportes de la flota. La información persistida está en la base `E_Bike_Bateria`.
+E-Bike Energy es una aplicación web para consultar la batería asociada a una cuenta cliente y, para administración, revisar el inventario, el historial de cargas, los registros de energía, las alertas y los reportes de la flota. La información persistida está en la base `e_bike_bateria`.
 
 Este manual describe los controles presentes y el comportamiento conectado en el código. Cuando una pantalla existe pero no guarda cambios en el servidor, se indica de forma explícita.
 

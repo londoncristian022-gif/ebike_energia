@@ -5,7 +5,7 @@ Sistema web para la gestión y analítica de flota E-Bike Energy.
 ## Estructura del proyecto
 
 - `api/api.php`: API JSON.
-- `config/conexion.php`: conexión PDO a `E_Bike_Bateria`.
+- `config/conexion.php`: conexión PDO a `e_bike_bateria` (mismo nombre y uso de minúsculas que en `ems_base.sql`).
 - `controllers/`: autenticación, operaciones y alta de baterías.
 - `public/`: interfaz HTML, CSS y JavaScript; las librerías de gráficas y PDF están en `public/js/vendor/`.
 - `ems_base.sql`: esquema SQL con tablas, datos de demostración y procedimientos almacenados.
@@ -20,6 +20,6 @@ Sistema web para la gestión y analítica de flota E-Bike Energy.
 
 ## Notas
 
-- Las credenciales iniciales de demostración se encuentran en `ems_base.sql` y `public/index.html`. No las use en producción.
+- `ems_base.sql` crea las cuentas de demostración y `public/index.html` muestra sus credenciales en el formulario de acceso. Retírelas o reemplácelas antes de desplegar el sistema; no son cuentas de producción.
 - El rol operador no está implementado; los roles actuales son administrador y cliente.
 - Consulte `docs/manual_usuario_por_roles.md` y `docs/manual_instalacion_y_tecnico.md` para permisos, API y limitaciones conocidas.

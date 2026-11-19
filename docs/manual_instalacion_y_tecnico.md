@@ -47,8 +47,8 @@ Los avisos de licencia están en `public/js/vendor/LICENSES.md`. El proyecto no 
 ## 3. Configuración y despliegue de la base de datos
 
 1. Inicie Apache y MySQL/MariaDB desde XAMPP, Laragon u otro entorno compatible.
-2. Importe el único archivo `ems_base.sql` en phpMyAdmin o mediante el cliente SQL. El script crea y selecciona `E_Bike_Bateria`, tablas, datos de ejemplo y procedimientos almacenados.
-3. Revise `config/conexion.php`. Actualmente define host `localhost`, base `E_Bike_Bateria`, usuario `root` y contraseña vacía.
+2. Importe el único archivo `ems_base.sql` en phpMyAdmin o mediante el cliente SQL. El script crea y selecciona `e_bike_bateria`, tablas, datos de ejemplo y procedimientos almacenados.
+3. Revise `config/conexion.php`. Actualmente define host `localhost`, base `e_bike_bateria`, usuario `root` y contraseña vacía. El nombre coincide exactamente con el del script SQL.
 4. Coloque el proyecto bajo la raíz del servidor. En esta instalación, `index.php` redirige a `public/index.html`; la ruta local de ejemplo es `http://localhost/ebike_energia/`.
 
 Credenciales iniciales de demostración declaradas en SQL e interfaz:
