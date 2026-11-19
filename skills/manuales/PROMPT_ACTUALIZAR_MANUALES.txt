@@ -1,0 +1,41 @@
+﻿# PROPÓSITO
+Actuar como ingeniero de documentación técnica senior para auditar el código fuente del proyecto E-Bike Energy y actualizar los manuales institucionales en español, generando versiones en Markdown (`.md`) y Word (`.docx`) mediante el script de conversión.
+
+## ÁREAS DE ANÁLISIS OBLIGATORIAS
+Antes de redactar, revisa y extrae evidencia real de estas rutas y archivos:
+
+- `api/`: endpoints y servicios backend.
+- `config/`: conexión a base de datos y parámetros de configuración. No expongas credenciales ni secretos.
+- `controllers/`: lógica de negocio y control de acceso por roles.
+- `public/`: interfaces web, scripts JavaScript locales, estilos y recursos.
+- `ems_base.sql`: esquema SQL principal.
+- `README.md` y estructura general del proyecto, incluida `documentacion/`.
+- `skills/manuales/SKILL.md`: procedimiento y requisitos de los entregables.
+
+## ENTREGABLES A ACTUALIZAR
+
+1. **Manual de Usuario por Roles**
+   - Ubicación vigente: `docs/manual_usuario_por_roles.md` y `docs/manual_usuario_por_roles.docx`.
+   - Documenta la matriz de permisos y los perfiles que estén realmente implementados, según el código y el esquema. No presupongas que existen roles sugeridos.
+   - Incluye guías paso a paso por pantalla, navegación y resolución de errores comunes respaldados por evidencia.
+
+2. **Manual de Instalación y Técnico**
+   - Ubicación vigente: `docs/manual_instalacion_y_tecnico.md` y `docs/manual_instalacion_y_tecnico.docx`.
+   - Documenta requisitos comprobables del entorno local, configuración de base de datos, arquitectura de carpetas, endpoints y comandos de ejecución.
+
+## REGLAS DE EJECUCIÓN
+
+- **Evidencia verificable:** Basa cada afirmación en código, configuración o SQL presentes en el repositorio. Si un dato no se puede comprobar, márcalo exactamente como `[PENDIENTE DE CONFIRMACIÓN: descripción concreta]`.
+- **Recorrido completo:** Sigue las acciones desde la interfaz y JavaScript hasta el endpoint y la consulta SQL. Identifica como limitación cualquier función que no esté conectada o no persista datos.
+- **Datos ilustrativos:** Distingue los valores estáticos y de demostración de los datos dinámicos obtenidos del servidor.
+- **Conversión:** Después de actualizar los archivos Markdown, ejecuta estos comandos para sincronizar los documentos Word:
+
+  ```powershell
+  python skills/manuales/scripts/md_to_docx.py docs/manual_usuario_por_roles.md docs/manual_usuario_por_roles.docx
+  python skills/manuales/scripts/md_to_docx.py docs/manual_instalacion_y_tecnico.md docs/manual_instalacion_y_tecnico.docx
+  ```
+
+- **Archivos Word abiertos:** Si `docs/` contiene archivos temporales `~$*.docx`, no sobrescribas el documento bloqueado. Genera los demás entregables que no estén bloqueados e informa del archivo afectado.
+- **Formato:** Mantén separados el manual para usuarios no técnicos y el manual especializado. Usa un tono formal, claro y adecuado al contexto de Medellín, Colombia.
+- **Alcance:** Actualiza la documentación; no ejecutes SQL ni cambies la funcionalidad de la aplicación.
+- **Informe final:** Enumera los archivos y secciones modificados, los endpoints y tablas documentados y los pendientes de revisión.

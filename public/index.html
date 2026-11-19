@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Management System - E-Bike</title>
+  <link rel="stylesheet" href="css/index.css?v=8">
+  <script src="js/vendor/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <section id="pantallaLogin" class="login-screen position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="z-index: 10000; background-color: #0f172a !important;" role="dialog" aria-modal="true" aria-labelledby="loginScreenTitle" aria-hidden="false">
+    <div class="login-screen-card">
+      <div class="text-center mb-4">
+        <h1 id="loginScreenTitle" class="login-screen-title">E-BIKE</h1>
+        <p class="login-screen-description">Ingrese sus credenciales para acceder al sistema</p>
+      </div>
+      <form id="formLoginPantalla">
+        <div class="form-group">
+          <label for="txtEmail">Correo electrónico</label>
+          <input type="email" id="txtEmail" name="email" placeholder="Correo electrónico" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="txtPassword">Contraseña</label>
+          <input type="password" id="txtPassword" name="password" placeholder="Contraseña" autocomplete="current-password" required>
+        </div>
+        <p id="loginPantallaError" class="login-error" role="alert" hidden></p>
+        <button id="btnIngresarSistema" class="btn-primary login-screen-submit" type="submit">Ingresar al sistema</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="mobile-topbar">
+    <button id="btnAbrirMenu" class="mobile-menu-button" type="button" aria-label="Abrir menú" aria-controls="sidebarPrincipal" aria-expanded="false">☰</button>
+    <div class="mobile-brand"><span class="logo-box">EB</span><strong>Bike Electric</strong></div>
+    <span id="lblUsuarioRolMobile" class="mobile-role-badge">CLIENTE</span>
+  </div>
+  <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- SIDEBAR LATERAL -->
+  <aside id="sidebarPrincipal" class="sidebar" inert aria-label="Navegación principal">
+    <button id="btnCerrarMenu" class="sidebar-close-button" type="button" aria-label="Cerrar menú">&times;</button>
+    <div class="brand sidebar-brand">
+      <div class="logo-box">EB</div>
+      <div class="sidebar-brand-copy">
+        <h2>Bike</h2>
+        <span class="subtext">Electric</span>
+      </div>
+      <span id="lblUsuarioRolHeader" class="sidebar-role-badge bg-primary">CLIENTE</span>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">OPERACIONES</div>
+      
+      <a href="#dashboard" class="nav-link" data-section="dashboard">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        <span id="navPrincipalLabel">Mi vehículo</span>
+      </a>
+      
+      <a href="#baterias" class="nav-link admin-only" data-section="baterias">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17 6H16V4C16 2.89 15.11 2 14 2H10C8.89 2 8 2.89 8 4V6H7C5.89 6 5 6.89 5 8V20C5 21.11 5.89 22 7 22H17C18.11 22 19 21.11 19 20V8C19 6.89 18.11 6 17 6Z"/></svg>
+        Baterías
+      </a>
+      
+      <a href="#cargas" class="nav-link admin-only" data-section="cargas">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        Cargas
+      </a>
+      
+      <a href="#energia" class="nav-link admin-only" data-section="energia">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        Energía y costos
+      </a>
+      
+      <a href="#alertas" class="nav-link admin-only" data-section="alertas">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        Alertas
+      </a>
+    </div>
+
+    <div class="nav-group sidebar-system-menu" style="margin-top: auto;">
+      <div class="nav-label">SISTEMA</div>
+      
+      <a href="#" id="btnSincronizar" class="nav-link btn-sincronizar">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        Sincronizar
+      </a>
+      
+      <a href="#" id="btnModoVisual" class="nav-link btn-modo-visual">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        Modo visual
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <small class="sidebar-user-label">USUARIO ACTUAL</small>
+      <span id="lblUsuarioNombre" class="sidebar-user-name">Invitado</span>
+      <span id="lblUsuarioRol" class="sidebar-user-role" hidden>cliente</span>
+      <div class="sidebar-footer-actions">
+        <button id="btnCambiarUsuario" class="sidebar-auth-button" type="button">Cambiar</button>
+        <button id="btnCerrarSesion" class="sidebar-auth-button sidebar-logout-button" type="button" hidden>Cerrar sesión</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ÁREA DE CONTENIDO -->
+  <main class="main-content" inert>
+    
+    <section id="dashboard" class="section">
+  <div class="breadcrumb">FLEET OPERATIONS / E-BIKE</div>
+  <h1 class="page-title" id="dashboard-title">Panel general</h1>
+
+  <div id="infoClienteRenta" class="customer-dashboard" hidden>
+    <div class="customer-vehicle-card">
+      <div>
+        <small class="customer-overline">Patineta alquilada</small>
+        <h2 class="customer-vehicle-name" id="cliCodigoVehiculo">Consultando asignación...</h2>
+        <span class="customer-use-badge" id="cliEstadoAlquiler">Comprobando alquiler</span>
+      </div>
+      <div class="customer-charge">
+        <small class="customer-overline">Estado de carga actual</small>
+        <strong id="cliNivelBateria">—</strong>
+      </div>
+    </div>
+    <div class="customer-metrics">
+      <article class="card customer-metric">
+        <small>Autonomía estimada</small>
+        <strong id="cliAutonomia">No disponible</strong>
+        <span>Rendimiento según tu velocidad promedio</span>
+      </article>
+      <article class="card customer-metric">
+        <small>Batería asignada</small>
+        <strong id="cliCodigoBateria">No disponible</strong>
+        <span>Identificador del módulo asociado a tu cuenta</span>
+      </article>
+      <article class="card customer-metric">
+        <small>Estado operativo</small>
+        <strong id="cliEstadoBateria">No disponible</strong>
+        <span id="cliDetallesBateria">Temperatura y salud (SOH) no disponibles</span>
+      </article>
+    </div>
+  </div>
+
+  <div id="panelAdminDashboard" class="admin-dashboard">
+  <!-- TARJETAS DE MÉTRICAS PRINCIPALES -->
+  <div class="grid4" style="margin-bottom: 24px;">
+    <div class="metric">
+      <div class="label">BATERÍAS ACTIVAS</div>
+      <div class="value" id="metric-baterias-activas">412</div>
+      <div class="subvalue positive">↑ 4.2% esta semana</div>
+    </div>
+    <div class="metric">
+      <div class="label">SOC PROMEDIO</div>
+      <div class="value" id="metric-soc-promedio">78.4%</div>
+      <div class="subvalue positive">↑ 2.8% vs. ayer</div>
+    </div>
+    <div class="metric">
+      <div class="label">ENERGÍA 24 H</div>
+      <div class="value">3,992 kWh</div>
+      <div class="subvalue info" id="metric-estaciones-activas">6 estaciones activas</div>
+    </div>
+    <div class="metric">
+      <div class="label">ALERTAS ACTIVAS</div>
+      <div class="value">19</div>
+      <div class="subvalue negative">2 críticas requieren atención</div>
+    </div>
+  </div>
+
+  <!-- FILA INTERMEDIA: CONSUMO Y ESTADO DE FLOTA -->
+  <div class="grid-2-col" style="margin-bottom: 24px;">
+    <!-- Consumo por estación -->
+    <div class="card">
+      <h3>Consumo energético por estación</h3>
+      <p class="card-subtitle">Distribución de las últimas 24 horas</p>
+      
+      <div class="bar-group">
+        <div class="bar-label"><span>EST-01 · Central Norte</span> <strong>1,842</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 85%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>EST-02 · Hub Tecnológico</span> <strong>1,210</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 60%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>EST-03 · Paseo del Río</span> <strong>940</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 45%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>EST-04 · Plaza Mayor</span> <strong>—</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 25%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Estado de flota -->
+    <div class="card">
+      <h3>Estado de flota</h3>
+      <p class="card-subtitle">Telemetría resumida en tiempo real</p>
+
+      <div class="bar-group">
+        <div class="bar-label"><span>Operativas</span> <strong>76%</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 76%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>En carga</span> <strong>15%</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 15%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Mantenimiento</span> <strong>6%</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 6%;"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Inactivas</span> <strong>3%</strong></div>
+        <div class="progress-bg"><div class="progress-bar" style="width: 3%;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILA INFERIOR: TARJETAS DE DETALLE -->
+  <div class="grid3">
+    <!-- Alerta crítica -->
+    <div class="card">
+      <h3>Última alerta crítica</h3>
+      <p class="card-subtitle">BAT-089 · BK-156</p>
+      <span class="badge-critica" style="display:inline-block; margin: 8px 0;">CRÍTICA</span>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Temperatura de módulo: <strong>52.4 °C</strong>. Se recomienda aislamiento inmediato.
+      </p>
+      <button class="btn-secondary" onclick="window.location.hash='alertas'">Ver alertas</button>
+    </div>
+
+    <!-- Rotación rápida -->
+    <div class="card">
+      <h3>Rotación rápida</h3>
+      <p class="card-subtitle">Tiempo promedio de intercambio</p>
+      <div class="value" style="font-size: 32px; font-weight: 800; margin: 12px 0;">48 s</div>
+      <span class="badge-success">DENTRO DEL OBJETIVO</span>
+    </div>
+
+    <!-- Red renovable -->
+    <div class="card">
+      <h3>Red renovable</h3>
+      <p class="card-subtitle">Energía inteligente priorizada</p>
+      <div class="value" style="font-size: 32px; font-weight: 800; margin: 12px 0;">82%</div>
+      <span class="badge-success">MODO ECO ACTIVO</span>
+    </div>
+  </div>
+
+  <section id="seccionReportesAdmin" class="card admin-only reportes-admin" aria-labelledby="tituloReportesAdmin">
+    <div class="reportes-header">
+      <div>
+        <h2 id="tituloReportesAdmin">Reportes Analíticos de Flota</h2>
+        <p class="card-subtitle">Selecciona un reporte para verlo; el PDF reúne todos los módulos analíticos</p>
+      </div>
+      <div class="reportes-actions">
+        <label class="reportes-fecha" for="fechaInicioReporte">
+          Desde
+          <input id="fechaInicioReporte" type="date" class="reportes-date">
+        </label>
+        <label class="reportes-fecha" for="fechaFinReporte">
+          Hasta
+          <input id="fechaFinReporte" type="date" class="reportes-date">
+        </label>
+        <label class="sr-only" for="selectTipoReporte">Tipo de reporte</label>
+        <select id="selectTipoReporte" class="reportes-select">
+          <option value="consumo">Consumo por Estación</option>
+          <option value="alertas">Alertas de Seguridad</option>
+          <option value="flota">Estado de la Flota</option>
+          <option value="sesiones">Sesiones de Carga</option>
+        </select>
+        <button id="btnFiltrarReporte" class="btn-secondary" type="button">Actualizar</button>
+        <button id="btnExportarReporte" class="btn-secondary reportes-export" type="button">
+          Descargar informe consolidado PDF
+        </button>
+      </div>
+    </div>
+
+    <p class="card-subtitle">El rango filtra consumo, sesiones y alertas. Flota y baterías muestran el estado actual.</p>
+    <p id="estadoReporte" class="reportes-status" role="status" aria-live="polite"></p>
+    <div class="reportes-grid">
+      <div class="reportes-chart">
+        <canvas id="graficaReportes" role="img" aria-label="Gráfica del reporte seleccionado"></canvas>
+      </div>
+      <div class="reportes-metricas">
+        <article class="reportes-metrica">
+          <small>Total de registros</small>
+          <strong id="repTotalRegistros">0</strong>
+        </article>
+        <article class="reportes-metrica">
+          <small>Métrica destacada</small>
+          <strong id="repMetricaDestacada">—</strong>
+        </article>
+      </div>
+    </div>
+  </section>
+  </div>
+</section>
+
+   <section id="baterias" class="section" data-role-required="administrador" style="display:none;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+    <div>
+      <div class="breadcrumb">FLEET OPERATIONS / E-BIKE</div>
+      <h1 class="page-title" style="margin-bottom: 0;">Inventario y Telemetría de Baterías</h1>
+    </div>
+    <button class="btn-primary" data-role-required="administrador" onclick="UI.abrirModalBateria()">+ Registrar batería</button>
+  </div>
+
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <h3 id="baterias-count">Inventario de Baterías (0)</h3>
+        <p class="card-subtitle" style="margin-bottom: 0;">Módulos en red y estado operativo</p>
+      </div>
+      <input type="text" id="input-buscar-bateria" placeholder="Buscar por código..." class="input-search" onkeyup="UI.filtrarBaterias()">
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>CÓDIGO BATERÍA</th>
+            <th>BICICLETA</th>
+            <th>CÓDIGO QR</th>
+            <th>SOC (%)</th>
+            <th>SOH (%)</th>
+            <th>TEMPERATURA</th>
+            <th>VIDA ÚTIL</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-baterias-body">
+          <!-- Se llena dinámicamente desde JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL REGISTRAR BATERÍA -->
+<div id="modal-bateria" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Registrar Nueva Batería</h2>
+      <span class="close-btn" onclick="UI.cerrarModalBateria()">&times;</span>
+    </div>
+    <form id="form-registrar-bateria">
+      <div class="form-group">
+        <label>Código de Batería</label>
+        <input type="text" id="bateria-codigo" placeholder="Ej: BAT-090" required>
+      </div>
+      <div class="form-group">
+        <label for="bateriaBicicleta">Bicicleta Asignada</label>
+        <select class="form-select" id="bateriaBicicleta">
+          <option value="">Seleccione una bicicleta</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Código QR / MAC</label>
+        <input type="text" id="bateria-qr" placeholder="Ej: QR-BAT-090" required>
+      </div>
+      <div class="modal-field-row" style="display: flex; gap: 12px;">
+        <div class="form-group" style="flex: 1;">
+          <label>SOC Initial (%)</label>
+          <input type="number" id="bateria-soc" value="100" min="0" max="100" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>SOH (%)</label>
+          <input type="number" id="bateria-soh" value="100" min="0" max="100" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="UI.cerrarModalBateria()">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar Batería</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <section id="cargas" class="section admin-only" style="display:none;">
+  <div class="breadcrumb">FLEET OPERATIONS / E-BIKE</div>
+  <h1 class="page-title">Historial y Sesiones de Carga</h1>
+
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 700;">Sesiones de Carga</h3>
+        <p class="card-subtitle" style="margin-bottom: 0;">Historial de reabastecimiento en estaciones</p>
+      </div>
+      <button class="btn-primary" data-role-required="administrador" onclick="UI.abrirModalCarga()">Nueva carga</button>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID CARGA</th>
+            <th>BATERÍA</th>
+            <th>ESTACIÓN</th>
+            <th>SOC INIC.</th>
+            <th>SOC FIN.</th>
+            <th>DURACIÓN</th>
+            <th>ESTADO</th>
+            <th>ENERGÍA</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-cargas-body">
+          <!-- Datos renderizados mediante JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL REGISTRAR NUEVA CARGA -->
+<div id="modal-carga" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Registrar Nueva Carga</h2>
+      <span class="close-btn" onclick="UI.cerrarModalCarga()">&times;</span>
+    </div>
+    <form id="form-registrar-carga">
+      <div class="form-group">
+        <label for="carga-bateria">Batería</label>
+        <select id="carga-bateria" required>
+          <option value="">Cargando baterías...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="carga-estacion">Estación de carga</label>
+        <select id="carga-estacion" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-main);">
+          <option value="">Cargando estaciones...</option>
+        </select>
+      </div>
+      <div class="modal-field-row" style="display: flex; gap: 12px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="carga-soc-inic">SOC inicial (%)</label>
+          <input type="number" id="carga-soc-inic" value="15" min="0" max="100" step="0.01" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="carga-soc-fin">SOC final (%)</label>
+          <input type="number" id="carga-soc-fin" value="100" min="0" max="100" step="0.01" required>
+        </div>
+      </div>
+      <div class="modal-field-row" style="display: flex; gap: 12px;">
+        <div class="form-group" style="flex: 1;">
+          <label for="carga-duracion">Duración (min)</label>
+          <input type="number" id="carga-duracion" min="1" step="1" placeholder="Ej: 45" required>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="carga-energia">Energía (kWh)</label>
+          <input type="number" id="carga-energia" min="0.01" max="999999.99" step="0.01" placeholder="Ej: 2.4" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="carga-estado">Estado de carga</label>
+        <select id="carga-estado" required>
+          <option value="Completada">Completada</option>
+          <option value="En Curso">En Curso</option>
+          <option value="Interrumpida">Interrumpida</option>
+          <option value="Fallida">Fallida</option>
+        </select>
+      </div>
+      <p id="carga-error" class="carga-error" role="alert" hidden></p>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="UI.cerrarModalCarga()">Cancelar</button>
+        <button id="btnGuardarCarga" type="submit" class="btn-primary">Registrar Carga</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <section id="energia" class="section" data-role-required="administrador" style="display:none;">
+  <div class="breadcrumb">FLEET OPERATIONS / E-BIKE</div>
+  <h1 class="page-title">Registro de Energía y Auditoría de Costos</h1>
+
+  <!-- Tarjetas KPI Superiores -->
+  <div class="responsive-grid responsive-grid-4" style="margin-bottom: 24px;">
+    <div class="card">
+      <p class="card-subtitle" style="text-transform: uppercase; font-size: 11px; font-weight: 700;">CONSUMO MENSUAL</p>
+      <h2 id="kpi-consumo" style="font-size: 28px; margin: 8px 0 4px 0;">18,742</h2>
+      <span style="color: #059669; font-size: 12px; font-weight: 600;">kWh registrados</span>
+    </div>
+    <div class="card">
+      <p class="card-subtitle" style="text-transform: uppercase; font-size: 11px; font-weight: 700;">COSTO ESTIMADO</p>
+      <h2 id="kpi-costo" style="font-size: 28px; margin: 8px 0 4px 0;">$15.930.700 COP</h2>
+      <span style="color: #059669; font-size: 12px; font-weight: 600;">$850 COP / kWh</span>
+    </div>
+    <div class="card">
+      <p class="card-subtitle" style="text-transform: uppercase; font-size: 11px; font-weight: 700;">PRESUPUESTO</p>
+      <h2 id="kpi-presupuesto" style="font-size: 28px; margin: 8px 0 4px 0;">$18.000.000 COP</h2>
+      <span style="color: #059669; font-size: 12px; font-weight: 600;">88.5% utilizado</span>
+    </div>
+    <div class="card">
+      <p class="card-subtitle" style="text-transform: uppercase; font-size: 11px; font-weight: 700;">CO₂ EVITADO</p>
+      <h2 id="kpi-co2" style="font-size: 28px; margin: 8px 0 4px 0;">4.87 t</h2>
+      <span style="color: #059669; font-size: 12px; font-weight: 600;">movilidad eléctrica</span>
+    </div>
+  </div>
+
+  <!-- Simulador de Ahorro y CO2 -->
+  <div class="card" style="margin-bottom: 24px;">
+    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Simulador de ahorro y CO₂</h3>
+    <p class="card-subtitle" style="margin-bottom: 20px;">Calcula el impacto de desplazar consumo a horario valle.</p>
+    
+  <div class="simulator-layout">
+      <div style="flex: 1;">
+        <div class="form-group">
+          <label>Consumo estimado (kWh)</label>
+          <input type="number" id="sim-kwh" value="1000" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="display: flex; justify-content: space-between;">
+            <span>Desplazamiento a valle:</span>
+            <strong id="lbl-desplazamiento">50%</strong>
+          </label>
+          <input type="range" id="sim-porcentaje" min="0" max="100" value="50" style="width: 100%;">
+        </div>
+      </div>
+      
+      <div class="simulator-result">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">AHORRO ESTIMADO</p>
+        <h2 id="sim-ahorro" style="color: #059669; font-size: 28px; margin-bottom: 16px;">$105.000 COP</h2>
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">EMISIONES ASOCIADAS</p>
+        <h2 id="sim-emisiones" style="color: #059669; font-size: 28px;">260 Kg CO₂</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla Libro de Registro -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+      <div>
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Libro de registro</h3>
+        <p class="card-subtitle" style="margin-bottom: 0;">Auditoría de consumo por estación</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-secondary" type="button" onclick="abrirModalNuevoRegistro()" style="padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; cursor: pointer;">Nuevo Registro</button>
+        <button class="btn-secondary" type="button" onclick="descargarBalanceEnergia()" style="padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: transparent; cursor: pointer;">Descargar balance</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>REGISTRO</th>
+            <th>ESTACIÓN</th>
+            <th>FECHA</th>
+            <th>CONSUMO</th>
+            <th>TARIFA</th>
+            <th>TOTAL</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-energia-body">
+          <!-- Datos renderizados mediante JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para crear registros de energía -->
+<div id="modalNuevoRegistro" class="modal" role="dialog" aria-modal="true" aria-labelledby="tituloNuevoRegistro" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="tituloNuevoRegistro">Nuevo Registro de Consumo</h2>
+      <button class="login-modal-close" type="button" aria-label="Cerrar" onclick="cerrarModalNuevoRegistro()">×</button>
+    </div>
+    <form id="formNuevoRegistro" onsubmit="guardarNuevoRegistro(event)">
+      <div class="form-group">
+        <label for="regEstacionId">Estación</label>
+        <select id="regEstacionId" required>
+          <option value="1">Estación Central Poblado</option>
+          <option value="2">Estación Unicentro</option>
+          <option value="3">Estación Laureles</option>
+          <option value="4">Plaza Mayor</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="regConsumoKwh">Consumo (kWh)</label>
+        <input type="number" min="0.01" max="99999999.99" step="0.01" id="regConsumoKwh" placeholder="Ej: 150.50" required oninput="calcularTotalRegistro()">
+      </div>
+      <div class="form-group">
+        <label for="regTarifaCop">Tarifa por kWh (COP)</label>
+        <input type="number" min="0.001" max="999.999" step="0.001" id="regTarifaCop" value="850" required oninput="calcularTotalRegistro()">
+      </div>
+      <div class="form-group">
+        <label for="regTotalCop">Total calculado (COP)</label>
+        <input type="text" id="regTotalCop" readonly value="$ 0 COP">
+      </div>
+      <div class="form-group">
+        <label for="regPeriodo">Periodo / detalle</label>
+        <input type="text" id="regPeriodo" maxlength="50" placeholder="Ej: Consumo Hora Pico" required>
+      </div>
+      <p id="errorNuevoRegistro" class="login-error" role="alert" hidden></p>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="cerrarModalNuevoRegistro()">Cancelar</button>
+        <button id="btnGuardarNuevoRegistro" type="submit" class="btn-primary">Guardar Registro</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+    <section id="alertas" class="section" data-role-required="administrador" style="display:none;">
+  <div class="breadcrumb">FLEET OPERATIONS / E-BIKE</div>
+  <h1 class="page-title">Centro de Alertas de Energía y Seguridad</h1>
+
+  <!-- Tarjetas KPI de Alertas -->
+  <div class="responsive-grid responsive-grid-3" style="margin-bottom: 24px;">
+    <div class="card">
+      <h2 id="kpi-alertas-activas" style="font-size: 28px; margin-bottom: 4px;">19</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">Alertas activas</p>
+    </div>
+    <div class="card">
+      <h2 id="kpi-alertas-criticas" style="font-size: 28px; color: #dc2626; margin-bottom: 4px;">2</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">Críticas</p>
+    </div>
+    <div class="card">
+      <h2 id="kpi-alertas-resueltas" style="font-size: 28px; margin-bottom: 4px;">142</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">Resueltas</p>
+    </div>
+  </div>
+
+  <!-- Layout Principal de Alertas y Protocolo -->
+  <div class="responsive-grid responsive-grid-alerts">
+    
+    <!-- Lista de Alertas Recientes -->
+    <div class="card">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Alertas recientes</h3>
+      <p class="card-subtitle" style="margin-bottom: 20px;">Priorizadas por nivel de riesgo</p>
+      
+      <div id="lista-alertas-container" style="display: flex; flex-direction: column; gap: 12px;">
+        <!-- Elementos renderizados desde JavaScript -->
+      </div>
+    </div>
+
+    <!-- Panel de Protocolo de Seguridad -->
+    <div class="card" style="align-self: start;">
+      <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Protocolo de seguridad</h3>
+      <p class="card-subtitle" style="margin-bottom: 16px;">Estándar operativo para baterías Li-Ion</p>
+
+      <ol style="padding-left: 18px; margin-bottom: 24px; font-size: 13px; line-height: 1.8; color: var(--text-main);">
+        <li>Aislar y cortar suministro eléctrico.</li>
+        <li>Monitorear cualquier incremento térmico.</li>
+        <li>Mantener perímetro de seguridad de 5 m.</li>
+        <li>Enviar batería a cuarentena técnica antes de recargar.</li>
+      </ol>
+
+      <div id="box-alerta-critica" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px 16px; color: #991b1b; font-size: 13px; font-weight: 600;">
+        BAT-089: 52.4 °C · requiere revisión inmediata.
+      </div>
+    </div>
+
+  </div>
+</section>
+  </main>
+
+  <div id="modalLogin" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle" aria-hidden="true">
+    <div class="modal-content login-modal-content">
+      <div class="modal-header login-modal-header">
+        <h2 id="loginModalTitle">Iniciar sesión</h2>
+        <button id="btnCerrarModalLogin" class="login-modal-close" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="login-modal-body">
+        <form id="formLogin">
+          <div class="form-group">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" name="email" placeholder="ejemplo@ebike.com" autocomplete="username" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" name="password" placeholder="Contraseña" autocomplete="current-password" required>
+          </div>
+          <p id="loginError" class="login-error" role="alert" hidden></p>
+          <div class="modal-footer">
+            <button id="btnCancelarLogin" class="btn-secondary" type="button">Cancelar</button>
+            <button id="btnEnviarLogin" class="btn-primary" type="submit">Iniciar sesión</button>
+          </div>
+        </form>
+        <div class="login-demo-accounts">
+          <strong>Cuentas de prueba</strong><br>
+          Admin: <code>admin@ebike.com</code> / <code>admin123</code><br>
+          Cliente: <code>cliente@ebike.com</code> / <code>cliente123</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/api.js?v=3"></script>
+  <script src="js/ui.js?v=17"></script>
+  <script src="js/main.js?v=13"></script>
+</body>
+</html>
